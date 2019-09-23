@@ -4,7 +4,7 @@ import getPorts from './getPorts'
 import { RunnerConfig, ComposeService } from '../@types'
 
 const composeFileHelper = (runnerConfig: RunnerConfig): ComposeService => {
-  const { dependsOn, image, build, service, ports, props, networks: userNetworks } = runnerConfig
+  const { dependsOn, image, build, ports, props, networks: userNetworks } = runnerConfig
 
   let networks
   if (userNetworks) {
@@ -16,7 +16,7 @@ const composeFileHelper = (runnerConfig: RunnerConfig): ComposeService => {
 
   return {
     ...getDependsOn(dependsOn),
-    ...getImage({ image, build, service }),
+    ...getImage({ image, build }),
     ...(build ? { build } : {}),
     ...(networks ? { networks } : {}),
     ...getPorts(ports),

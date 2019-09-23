@@ -1,14 +1,4 @@
-import ConfigurationError from '../../errors/ConfigurationError'
-
-const getImage = ({
-  build,
-  image,
-  service,
-}: {
-  build?: string
-  image?: string
-  service: string
-}): { image: string } | {} => {
+const getImage = ({ build, image }: { build?: string; image?: string }): { image: string } | {} | void => {
   /**
    * If user provided an image via interface
    */
@@ -24,8 +14,6 @@ const getImage = ({
   if (build) {
     return {}
   }
-
-  throw new ConfigurationError(`${service} Could not determine "image" property for service`)
 }
 
 export default getImage
