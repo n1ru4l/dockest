@@ -75,7 +75,7 @@ export interface SharedDefaultableConfigProps {
   commands: string[]
   connectionTimeout: number
   dependsOn: DependsOn
-  host: string
+  host: string | ((containerId: string) => string)
   image: string | undefined
   networks: string[] | undefined
   ports: ObjStrStr

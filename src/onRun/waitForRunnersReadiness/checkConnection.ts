@@ -30,9 +30,14 @@ export { testables }
 
 export default async (runner: Runner) => {
   const {
-    runnerConfig: { service, connectionTimeout, host, ports },
+    runnerConfig: { service, connectionTimeout, ports },
     logger,
   } = runner
+
+  const host =
+    typeof runner.runnerConfig.host === 'function'
+      ? runner.runnerConfig.host(runner.containerId)
+      : runner.runnerConfig.host
 
   for (const port in ports) {
     const recurse = async (connectionTimeout: number) => {
