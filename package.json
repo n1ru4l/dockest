@@ -1,0 +1,70 @@
+{
+  "name": "dockest",
+  "version": "2.0.0-alpha.1",
+  "description": "Dockest is an integration testing tool aimed at alleviating the process of evaluating unit tests whilst running multi-container Docker applications.",
+  "keywords": [
+    "docker",
+    "docker-compose",
+    "jest",
+    "nodejs",
+    "node",
+    "integration testing"
+  ],
+  "homepage": "https://github.com/erikengervall/dockest#readme",
+  "bugs": {
+    "url": "https://github.com/erikengervall/dockest/issues"
+  },
+  "license": "MIT",
+  "author": "Erik Engervall <erik@engervall.com> (http://engervall.com)",
+  "files": [
+    "dist/**/*"
+  ],
+  "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/erikengervall/dockest.git"
+  },
+  "scripts": {
+    "prepare": "yarn build",
+    "build": "rm -rf ./dist && tsc",
+    "build:watch": "rm -rf ./dist && tsc --watch",
+    "dev:setup": "./tools/scripts/setup && yarn install:all",
+    "install:all": "./tools/scripts/install-all",
+    "generate:typedoc": "yarn typedoc ./src",
+    "test": "jest ./src --forceExit --detectOpenHandles",
+    "test:watch": "jest ./src --watch --forceExit --detectOpenHandles",
+    "test:examples": "cd examples && yarn test && cd ..",
+    "test:all": "yarn test && yarn test:examples",
+    "lint": "yarn eslint ./src/**/*.ts"
+  },
+  "dependencies": {
+    "execa": "^2.0.4",
+    "is-docker": "^2.0.0",
+    "js-yaml": "^3.13.1",
+    "ramda": "^0.26.1"
+  },
+  "devDependencies": {
+    "@types/execa": "^2.0.0",
+    "@types/jest": "^24.0.18",
+    "@types/js-yaml": "^3.12.1",
+    "@types/node": "^12.7.2",
+    "@types/prettier": "^1.18.2",
+    "@types/ramda": "^0.26.22",
+    "@typescript-eslint/eslint-plugin": "^2.0.0",
+    "@typescript-eslint/parser": "^2.0.0",
+    "@typescript-eslint/typescript-estree": "^2.0.0",
+    "eslint": "^6.2.1",
+    "eslint-config-prettier": "^6.1.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-no-only-tests": "^2.3.1",
+    "eslint-plugin-prettier": "^3.1.0",
+    "jest": "^24.9.0",
+    "jest-mock-proxy": "^3.0.0",
+    "prettier": "^1.18.2",
+    "prettier-eslint": "^9.0.0",
+    "ts-jest": "^24.0.2",
+    "typedoc": "^0.15.0",
+    "typedoc-plugin-markdown": "^2.1.3",
+    "typescript": "^3.5.3"
+  }
+}
