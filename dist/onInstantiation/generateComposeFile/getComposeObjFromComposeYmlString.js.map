@@ -1,0 +1,1 @@
+{"version":3,"file":"getComposeObjFromComposeYmlString.js","sourceRoot":"","sources":["../../../src/onInstantiation/generateComposeFile/getComposeObjFromComposeYmlString.ts"],"names":[],"mappings":";;AAAA,qCAAkC;AAGlC,kBAAe,CAAC,UAAkB,EAAE,EAAE;IACpC,MAAM,UAAU,GAAgB,kBAAQ,CAAC,UAAU,CAAC,CAAA;IACpD,OAAO,UAAU,CAAA;AACnB,CAAC,CAAA"}
