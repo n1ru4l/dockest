@@ -1,5 +1,5 @@
 import {
-  BaseRunner,
+  BaseRunnerInterface,
   GetComposeService,
   SharedDefaultableConfigProps,
   SharedRequiredConfigProps,
@@ -11,6 +11,7 @@ import Logger from '../../Logger'
 import validateConfig from '../../utils/validateConfig'
 import validateTypes from '../../utils/validateTypes'
 import composeFileHelper from '../composeFileHelper'
+import { ReadinessCheck } from '../../readiness-check/@types'
 
 interface RequiredConfigProps extends SharedRequiredConfigProps {
   service: string
@@ -29,7 +30,7 @@ const DEFAULT_CONFIG: DefaultableConfigProps = {
   ],
 }
 
-class ZooKeeperRunner implements BaseRunner {
+class ZooKeeperRunner implements BaseRunnerInterface {
   public static DEFAULT_HOST = SHARED_DEFAULT_CONFIG_PROPS.host
   public static DEFAULT_PORT = DEFAULT_PORT
   public containerId = ''
@@ -37,6 +38,7 @@ class ZooKeeperRunner implements BaseRunner {
   public runnerConfig: ZooKeeperRunnerConfig
   public logger: Logger
   public isBridgeNetworkMode = false
+  public readinessChecks: Array<ReadinessCheck> = []
 
   public constructor(config: RequiredConfigProps & Partial<DefaultableConfigProps>) {
     this.runnerConfig = {

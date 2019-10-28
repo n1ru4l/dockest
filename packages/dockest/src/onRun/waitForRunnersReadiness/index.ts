@@ -19,12 +19,35 @@ const setupRunner = async (runner: Runner, initializer: string) => {
     await fixRunnerHostAccessOnLinux(runner)
   }
 
-  await checkConnection(runner)
+  // these are now health checks
+  // await checkConnection(runner)
   await checkResponsiveness(runner)
-  await runRunnerCommands(runner)
-  runner.initializer = initializer
 
-  runner.logger.info('Setup successful', { nl: 1 })
+  runner.logger.info('Starting healthchecks.')
+  const readinessCheckPromises = runner.map(runner => runnerConfig)
+
+  const heathCheckPromisesSettled = readinessCheckPromises.map(p => p.catch(e => e))
+
+  try {
+    // wait until all health checks succeed or the container dies before
+    await Promise.race([Promise.reject('Container died.'), Promise.all(readinessCheckPromises)])
+
+    await runRunnerCommands(runner)
+    runner.initializer = initializer
+
+    runner.logger.info('Setup successful')
+  } catch (err) {
+    runner.logger.error('Either the container died or one of the healthchecks timed out.')
+    // cancel all healthchecks
+    for (const readinessCheck of runner.readinessChecks) {
+      readinessCheck.cancel()
+    }
+
+    // wait until all promises have settled (either canceled or failed)
+    await heathCheckPromisesSettled
+
+    runner.logger.error('Setup failed.', { nl: 1 })
+  }
 }
 
 const setupIfNotOngoing = async (runner: Runner, initializer: string) => {

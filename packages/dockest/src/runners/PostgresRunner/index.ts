@@ -1,5 +1,5 @@
 import {
-  BaseRunner,
+  BaseRunnerInterface,
   GetComposeService,
   SharedDefaultableConfigProps,
   SharedRequiredConfigProps,
@@ -10,6 +10,7 @@ import Logger from '../../Logger'
 import validateConfig from '../../utils/validateConfig'
 import validateTypes from '../../utils/validateTypes'
 import composeFileHelper from '../composeFileHelper'
+import { ReadinessCheck } from '../../readiness-check/@types'
 
 interface RequiredConfigProps extends SharedRequiredConfigProps {
   database: string
@@ -33,7 +34,7 @@ const DEFAULT_CONFIG: DefaultableConfigProps = {
   responsivenessTimeout: SHARED_DEFAULT_CONFIG_PROPS.responsivenessTimeout,
 }
 
-class PostgresRunner implements BaseRunner {
+class PostgresRunner implements BaseRunnerInterface {
   public static DEFAULT_HOST = SHARED_DEFAULT_CONFIG_PROPS.host
   public static DEFAULT_PORT = DEFAULT_PORT
   public static ENVIRONMENT_DATABASE = 'POSTGRES_DB'
@@ -44,6 +45,7 @@ class PostgresRunner implements BaseRunner {
   public runnerConfig: PostgresRunnerConfig
   public logger: Logger
   public isBridgeNetworkMode = false
+  public readinessChecks: Array<ReadinessCheck> = []
 
   public constructor(configUserInput: RequiredConfigProps & Partial<DefaultableConfigProps>) {
     this.runnerConfig = {

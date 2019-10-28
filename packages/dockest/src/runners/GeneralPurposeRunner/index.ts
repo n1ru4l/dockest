@@ -2,7 +2,7 @@ import Logger from '../../Logger'
 import validateConfig from '../../utils/validateConfig'
 import validateTypes from '../../utils/validateTypes'
 import {
-  BaseRunner,
+  BaseRunnerInterface,
   GetComposeService,
   SharedRequiredConfigProps,
   SharedDefaultableConfigProps,
@@ -10,10 +10,12 @@ import {
 } from '../@types'
 import { SHARED_DEFAULT_CONFIG_PROPS } from '../constants'
 import { defaultGetComposeService } from '../composeFileHelper'
+import { ShellCommandReadinessCheck } from '../../readiness-check/ShellCommandReadinessCheck'
+import { ReadinessCheck } from '../../readiness-check/@types'
 
 interface RequiredConfigProps extends SharedRequiredConfigProps {}
 interface OptionalConfigProps {
-  getResponsivenessCheckCommand: (containerId: string) => string
+  responsivenessCommand: string
 }
 interface DefaultableConfigProps extends SharedDefaultableConfigProps {}
 interface GeneralPurposeRunnerConfig
@@ -25,13 +27,14 @@ const DEFAULT_CONFIG: DefaultableConfigProps = {
   ...SHARED_DEFAULT_CONFIG_PROPS,
 }
 
-class GeneralPurposeRunner implements BaseRunner {
+class GeneralPurposeRunner implements BaseRunnerInterface {
   public containerId = ''
   public initializer = ''
   public runnerConfig: GeneralPurposeRunnerConfig
   public logger: Logger
   public createResponsivenessCheckCmd: (() => string) | null = null
   public isBridgeNetworkMode = false
+  public readinessChecks: Array<ReadinessCheck> = []
 
   public constructor(config: RequiredConfigProps & Partial<DefaultableConfigProps> & Partial<OptionalConfigProps>) {
     this.runnerConfig = {
@@ -39,14 +42,13 @@ class GeneralPurposeRunner implements BaseRunner {
       ...config,
     }
 
-    if (this.runnerConfig.getResponsivenessCheckCommand) {
-      this.createResponsivenessCheckCmd = () => {
-        if (!this.runnerConfig.getResponsivenessCheckCommand) {
-          throw new Error('Invalid state')
-        }
-        const command = this.runnerConfig.getResponsivenessCheckCommand(this.containerId)
-        return command
-      }
+    if (this.runnerConfig.responsivenessCommand) {
+      this.readinessChecks.push(
+        new ShellCommandReadinessCheck({
+          command: this.runnerConfig.responsivenessCommand,
+          runInsideContainer: true,
+        }),
+      )
     }
 
     this.logger = new Logger(this)

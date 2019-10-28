@@ -2,7 +2,7 @@ import Logger from '../../Logger'
 import validateConfig from '../../utils/validateConfig'
 import validateTypes from '../../utils/validateTypes'
 import {
-  BaseRunner,
+  BaseRunnerInterface,
   GetComposeService,
   SharedRequiredConfigProps,
   SharedDefaultableConfigProps,
@@ -10,6 +10,9 @@ import {
 } from '../@types'
 import { SHARED_DEFAULT_CONFIG_PROPS } from '../constants'
 import { defaultGetComposeService } from '../composeFileHelper'
+import { ReadinessCheck } from '../../readiness-check/@types'
+import { ShellCommandReadinessCheck } from '../../readiness-check/ShellCommandReadinessCheck'
+import { AbstractRunner } from '../AbstractRunner'
 
 interface RequiredConfigProps extends SharedRequiredConfigProps {}
 interface DefaultableConfigProps extends SharedDefaultableConfigProps {
@@ -31,7 +34,33 @@ const DEFAULT_CONFIG: DefaultableConfigProps = {
   responsivenessTimeout: SHARED_DEFAULT_CONFIG_PROPS.responsivenessTimeout,
 }
 
-class RedisRunner implements BaseRunner {
+export class RedisReadinessCheck extends ShellCommandReadinessCheck {
+  constructor({
+    host,
+    password,
+    port = DEFAULT_PORT,
+    timeout = 30,
+  }: {
+    host: string
+    password: string
+    port?: number
+    timeout?: number
+  }) {
+    const redisCliPingOpts = ` \
+      -h ${host} \
+      -p ${port} \
+      ${!!password ? `-a ${password}` : ''} \
+      PING \
+    `
+
+    super({
+      command: `redis-cli ${redisCliPingOpts}`,
+      timeout,
+    })
+  }
+}
+
+class RedisRunner extends AbstractRunner {
   public static DEFAULT_HOST = SHARED_DEFAULT_CONFIG_PROPS.host
   public static DEFAULT_PORT = DEFAULT_PORT
   public containerId = ''
@@ -39,13 +68,13 @@ class RedisRunner implements BaseRunner {
   public runnerConfig: RedisRunnerConfig
   public logger: Logger
   public isBridgeNetworkMode = false
+  public readinessChecks: Array<ReadinessCheck> = []
 
   public constructor(config: RequiredConfigProps & Partial<DefaultableConfigProps>) {
-    this.runnerConfig = {
+    super({
       ...DEFAULT_CONFIG,
       ...config,
-    }
-    this.logger = new Logger(this)
+    })
   }
 
   public mergeConfig({ ports, build, image, networks, ...composeService }: ComposeService) {
@@ -57,6 +86,14 @@ class RedisRunner implements BaseRunner {
       ...(ports ? { ports } : {}),
       ...(networks ? { networks: Object.keys(networks) } : {}),
     }
+
+    this.readinessChecks.push(
+      new RedisReadinessCheck({
+        host: this.runnerConfig.host,
+        password: this.runnerConfig.password,
+        timeout: this.runnerConfig.responsivenessTimeout,
+      }),
+    )
   }
 
   public validateConfig() {
@@ -67,24 +104,6 @@ class RedisRunner implements BaseRunner {
   }
 
   public getComposeService: GetComposeService = () => defaultGetComposeService(this.runnerConfig)
-
-  public createResponsivenessCheckCmd = () => {
-    const { host: runnerHost, password: runnerPassword } = this.runnerConfig
-    const containerId = this.containerId
-
-    // FIXME: Should `-p` really be DEFAULT_PORT or runnerConfig's port?
-    const redisCliPingOpts = ` \
-                            -h ${runnerHost} \
-                            -p ${DEFAULT_PORT} \
-                            ${!!runnerPassword ? `-a ${runnerPassword}` : ''} \
-                            PING \
-                          `
-    const command = ` \
-                      docker exec ${containerId} redis-cli ${redisCliPingOpts} \
-                    `
-
-    return command
-  }
 }
 
 export { RedisRunnerConfig }

@@ -5,6 +5,10 @@ import createBridgeNetwork from './createBridgeNetwork'
 import joinBridgeNetwork from './joinBridgeNetwork'
 import removeBridgeNetwork from './removeBridgeNetwork'
 import leaveBridgeNetwork from './leaveBridgeNetwork'
+import { createDockerEventEmitter } from './createDockerEventEmitter'
+import { createContainerStartCheck } from './createContainerStartCheck'
+import { createContainerDiedCheck } from './createContainerDiedCheck'
+import { createServiceDockerEventStream } from './createServiceDockerEventStream'
 import { DockestConfig } from '../index'
 import Logger from '../Logger'
 import sleepForX from '../utils/sleepForX'
@@ -21,7 +25,21 @@ const onRun = async (config: DockestConfig) => {
     runners,
   } = config
 
-  const dockerComposeUpProcess = dockerComposeUp(runners.map(runner => runner.runnerConfig.service))
+  const emitter = createDockerEventEmitter(runners)
+
+  for (const runner of runners) {
+    // runner.eventStream$ = createServiceDockerEventStream(runner.runnerConfig.service, emitter)
+  }
+
+  const containerStartedTasks = runners.map(runner =>
+    createContainerStartCheck(runner, createServiceDockerEventStream(runner.runnerConfig.service, emitter)),
+  )
+  const containerDiedTasks = runners.map(runner =>
+    createContainerDiedCheck(runner, createServiceDockerEventStream(runner.runnerConfig.service, emitter)),
+  )
+
+  const serviceNames = runners.map(runner => runner.runnerConfig.service)
+  const dockerComposeUpProcess = dockerComposeUp(serviceNames)
   $.dockerComposeUpProcess = dockerComposeUpProcess
 
   if (dockerComposeUpProcess.stdout) {
@@ -41,7 +59,11 @@ const onRun = async (config: DockestConfig) => {
     await joinBridgeNetwork(hostname, 'host.dockest-runner.internal')
   }
 
-  await waitForRunnersReadiness(config)
+  // every single container should start
+  await Promise.all(containerStartedTasks.map(task => task.done))
+
+  // @TODO: abort/automatically fail readiness check in case container dies
+  await waitForRunnersReadiness(config, containerDiedTasks)
 
   if (afterSetupSleep > 0) {
     await sleepForX('After setup sleep', afterSetupSleep)
@@ -74,7 +96,8 @@ const onRun = async (config: DockestConfig) => {
   }
 
   dockerComposeUpProcess.cancel()
-  await dockerComposeUpProcess
+  await dockerComposeUpProcess.catch(() => {})
+  emitter.destroy()
 
   Logger.info('Docker Container Logs\n' + dockerLogs.join(''))
 

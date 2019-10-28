@@ -1,8 +1,8 @@
 import getDependsOn from './getDependsOn'
 import getPorts from './getPorts'
-import { RunnerConfig, ComposeService } from '../@types'
+import { ComposeService, SharedConfigProps } from '../@types'
 
-const composeFileHelper = (runnerConfig: RunnerConfig): ComposeService => {
+const composeFileHelper = (runnerConfig: SharedConfigProps): ComposeService => {
   const { dependsOn, image, build, ports, props, networks: userNetworks } = runnerConfig
 
   let networks
@@ -14,7 +14,7 @@ const composeFileHelper = (runnerConfig: RunnerConfig): ComposeService => {
   }
 
   return {
-    ...getDependsOn(dependsOn),
+    ...(dependsOn ? getDependsOn(dependsOn) : {}),
     ...(image && image.length ? { image } : {}),
     ...(build ? { build } : {}),
     ...(networks ? { networks } : {}),
@@ -23,7 +23,7 @@ const composeFileHelper = (runnerConfig: RunnerConfig): ComposeService => {
   }
 }
 
-const defaultGetComposeService = (runnerConfig: RunnerConfig): ComposeService => ({
+const defaultGetComposeService = (runnerConfig: SharedConfigProps): ComposeService => ({
   ...composeFileHelper(runnerConfig),
 })
 

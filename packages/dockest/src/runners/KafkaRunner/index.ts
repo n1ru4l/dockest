@@ -1,5 +1,5 @@
 import {
-  BaseRunner,
+  BaseRunnerInterface,
   GetComposeService,
   SharedDefaultableConfigProps,
   SharedRequiredConfigProps,
@@ -35,7 +35,7 @@ const DEFAULT_CONFIG: DefaultableConfigProps = {
   ],
 }
 
-class KafkaRunner implements BaseRunner {
+class KafkaRunner implements BaseRunnerInterface {
   public static DEFAULT_HOST = SHARED_DEFAULT_CONFIG_PROPS.host
   public static DEFAULT_PORT_PLAINTEXT = DEFAULT_PORT_PLAINTEXT
   public static DEFAULT_PORT_SASL_SSL = DEFAULT_PORT_SASL_SSL

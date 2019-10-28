@@ -4,6 +4,7 @@ import RedisRunner, { RedisRunnerConfig } from './RedisRunner'
 import ZooKeeperRunner, { ZooKeeperRunnerConfig } from './ZooKeeperRunner'
 import GeneralPurposeRunner, { GeneralPurposeRunnerConfig } from './GeneralPurposeRunner'
 import Logger from '../Logger'
+import { ReadinessCheck } from '../readiness-check/@types'
 
 export type Runner = KafkaRunner | PostgresRunner | RedisRunner | ZooKeeperRunner | GeneralPurposeRunner
 
@@ -56,14 +57,16 @@ export interface ComposeFile {
 
 export type GetComposeService = () => ComposeService
 
-export interface BaseRunner {
+export interface BaseRunnerInterface {
   getComposeService: GetComposeService
   containerId: string
   initializer: string
-  runnerConfig: RunnerConfig
+  runnerConfig: Partial<SharedDefaultableConfigProps> & SharedRequiredConfigProps
   logger: Logger
   validateConfig: () => void
+  setup: () => void
   isBridgeNetworkMode: boolean
+  readinessChecks: Array<ReadinessCheck>
 }
 
 export interface SharedRequiredConfigProps {
@@ -89,3 +92,5 @@ export interface SharedDefaultableConfigProps {
   props: { [key: string]: any }
   responsivenessTimeout: number
 }
+
+export type SharedConfigProps = SharedRequiredConfigProps & Partial<SharedDefaultableConfigProps>

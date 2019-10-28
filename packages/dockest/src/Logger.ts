@@ -1,6 +1,6 @@
 import readline from 'readline'
 import { LOG_LEVEL } from './constants'
-import { Runner } from './runners/@types'
+import { Runner, BaseRunnerInterface } from './runners/@types'
 
 interface Payload {
   data?: { [key: string]: any }
@@ -98,8 +98,8 @@ class Logger {
 
   private runnerService = ''
   private runnerSymbol = '🦇 '
-  public constructor(runner?: Runner) {
-    this.runnerService = runner ? runner.runnerConfig.service : ''
+  public constructor(serviceName?: string) {
+    this.runnerService = serviceName ? serviceName : ''
   }
 
   public setRunnerSymbol = (symbol: string): void => {
