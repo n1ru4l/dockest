@@ -1,0 +1,1 @@
+{"version":3,"file":"ConfigurationError.js","sourceRoot":"","sources":["../../../../../src/errors/ConfigurationError.ts"],"names":[],"mappings":";;;;;AAAA,4DAAmC;AAEnC,MAAqB,kBAAmB,SAAQ,mBAAS;IACvD,YAAmB,OAAe,EAAE,OAAgB;QAClD,KAAK,CAAC,OAAO,EAAE,OAAO,CAAC,CAAA;QAEvB,IAAI,CAAC,IAAI,GAAG,oBAAoB,CAAA;IAClC,CAAC;CACF;AAND,qCAMC"}

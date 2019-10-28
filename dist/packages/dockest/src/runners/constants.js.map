@@ -1,0 +1,1 @@
+{"version":3,"file":"constants.js","sourceRoot":"","sources":["../../../../../src/runners/constants.ts"],"names":[],"mappings":";;AAEa,QAAA,2BAA2B,GAAiC;IACvE,KAAK,EAAE,EAAE;IACT,QAAQ,EAAE,EAAE;IACZ,iBAAiB,EAAE,CAAC;IACpB,SAAS,EAAE,EAAE;IACb,IAAI,EAAE,WAAW;IACjB,KAAK,EAAE,SAAS;IAChB,QAAQ,EAAE,SAAS;IACnB,KAAK,EAAE,EAAE;IACT,KAAK,EAAE,EAAE;IACT,qBAAqB,EAAE,EAAE;CAC1B,CAAA"}
