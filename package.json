@@ -1,0 +1,42 @@
+{
+  "name": "dockest",
+  "version": "2.0.0-alpha.9",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "files": [
+    "dist/**/*"
+  ],
+  "description": "Dockest is an integration testing tool aimed at alleviating the process of evaluating unit tests whilst running multi-container Docker applications.",
+  "keywords": [
+    "docker",
+    "docker-compose",
+    "jest",
+    "nodejs",
+    "node",
+    "integration testing"
+  ],
+  "homepage": "https://erikengervall.github.io/dockest/",
+  "bugs": {
+    "url": "https://github.com/erikengervall/dockest/issues"
+  },
+  "license": "MIT",
+  "author": "Erik Engervall <erik.engervall@gmail.com> (https://github.com/erikengervall)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/erikengervall/dockest.git"
+  },
+  "scripts": {
+    "build": "tsc",
+    "generate:typedoc": "typedoc .",
+    "test:unit": "jest . --forceExit --detectOpenHandles"
+  },
+  "dependencies": {
+    "execa": "^2.0.4",
+    "is-docker": "^2.0.0",
+    "js-yaml": "^3.13.1"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^3.12.1",
+    "typescript": "^3.6.3"
+  }
+}
