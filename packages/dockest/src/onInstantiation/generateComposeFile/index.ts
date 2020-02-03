@@ -1,5 +1,5 @@
-import { default as fsLib } from 'fs'
-import { default as yamlLib } from 'js-yaml'
+import { default as fs } from 'fs'
+import { default as yaml } from 'js-yaml'
 import createComposeObjFromComposeFile from './createComposeObjFromComposeFile'
 import createComposeObjFromRunners from './createComposeObjFromRunners'
 import transformComposeObjToRunners from './transformComposeObjToRunners'
@@ -10,7 +10,7 @@ import {
   GENERATED_RUNNER_COMPOSE_FILE_NAME,
 } from '../../constants'
 
-export default (config: DockestConfig, yaml = yamlLib, fs = fsLib) => {
+export default (config: DockestConfig, getSecretPath: (secretname: string) => string) => {
   const configFiles = []
   if (config.opts.composeFile) {
     if (Array.isArray(config.opts.composeFile)) {
@@ -39,6 +39,19 @@ export default (config: DockestConfig, yaml = yamlLib, fs = fsLib) => {
 
   if (config.opts.guessRunnerType) {
     config.runners = transformComposeObjToRunners(config, composeObjFromComposeFile)
+  }
+
+  // inject secrets
+  if (Array.isArray(config.secrets)) {
+    for (const service of Object.values(composeObjFromComposeFile.services)) {
+      if (!service.secrets) continue
+      if (!service.volumes) {
+        service.volumes = []
+      }
+      for (const secret of service.secrets) {
+        service.volumes.push(`${getSecretPath(secret)}:/run/secrets/${secret}:ro`)
+      }
+    }
   }
 
   // write final config to fs

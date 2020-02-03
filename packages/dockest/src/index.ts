@@ -1,6 +1,6 @@
 import isDocker from 'is-docker' // eslint-disable-line import/default
 import { DEFAULT_USER_CONFIG, LOG_LEVEL, INTERNAL_CONFIG } from './constants'
-import { ErrorPayload, ObjStrStr, ArrayAtLeastOne } from './@types'
+import { ErrorPayload, ObjStrStr, ArrayAtLeastOne, DockerSecret } from './@types'
 import { JestConfig } from './onRun/runJest'
 import { Runner } from './runners/@types'
 import * as runners from './runners'
@@ -34,6 +34,7 @@ interface InternalConfig {
 }
 export interface DockestConfig {
   runners: ArrayAtLeastOne<Runner>
+  secrets: Array<DockerSecret>
   opts: DefaultableUserConfig
   jest: JestConfig
   $: InternalConfig
@@ -46,6 +47,7 @@ class Dockest {
     this.config = {
       jest,
       runners: [],
+      secrets: [],
       opts: { ...DEFAULT_USER_CONFIG, ...opts },
       $: { ...INTERNAL_CONFIG },
     }
@@ -54,6 +56,10 @@ class Dockest {
 
   public attachRunners = (runners: ArrayAtLeastOne<Runner>) => {
     this.config.runners = runners
+  }
+
+  public registerSecrets = (secrets: Array<DockerSecret>) => {
+    this.config.secrets = secrets
   }
 
   public run = async (): Promise<void> => {
@@ -67,7 +73,7 @@ class Dockest {
       })
     }
 
-    const { composeFileConfig } = onInstantiation(this.config)
+    const { composeFileConfig, cleanup } = await onInstantiation(this.config)
 
     for (const runner of this.config.runners) {
       runner.mergeConfig(composeFileConfig.services[runner.runnerConfig.service])
@@ -75,6 +81,7 @@ class Dockest {
 
     this.validateConfig()
     await onRun(this.config)
+    await cleanup()
   }
 
   private validateConfig = () => {

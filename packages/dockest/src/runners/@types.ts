@@ -17,6 +17,7 @@ export type RunnerConfig =
 export interface ComposeService {
   ports: PortBindingType[]
   networks?: { [key: string]: null }
+  secrets?: Array<string>
   volumes?: string[]
   command?: string
   container_name?: string
@@ -52,6 +53,10 @@ export interface ComposeFile {
   volumes?: {
     [key: string]: null
   }
+  secrets?: Array<{
+    external?: boolean
+    name: string
+  }>
 }
 
 export type GetComposeService = () => ComposeService

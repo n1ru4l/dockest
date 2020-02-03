@@ -12,3 +12,8 @@ export interface ObjStrStr {
 }
 
 export type ArrayAtLeastOne<T> = { [key: number]: T } & Array<T>
+
+export interface DockerSecret {
+  name: string
+  content: string
+}

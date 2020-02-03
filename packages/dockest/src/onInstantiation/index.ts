@@ -2,15 +2,18 @@ import assignRunnerSymbol from './assignRunnerSymbol'
 import generateComposeFile from './generateComposeFile'
 import setLogLevel from './setLogLevel'
 import setupExitHandler from './setupExitHandler'
+import createDockerSecrets from './createDockerSecrets'
+
 import { DockestConfig } from '../index'
 
-const onInstantiation = (config: DockestConfig) => {
+const onInstantiation = async (config: DockestConfig) => {
   setLogLevel(config)
-  const { composeFileConfig } = generateComposeFile(config)
+  const { getSecretPath, cleanup } = await createDockerSecrets(config.secrets)
+  const { composeFileConfig } = generateComposeFile(config, getSecretPath)
   assignRunnerSymbol(config)
   setupExitHandler(config)
 
-  return { composeFileConfig }
+  return { composeFileConfig, cleanup }
 }
 
 export default onInstantiation

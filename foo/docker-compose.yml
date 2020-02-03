@@ -1,0 +1,7 @@
+version: '3.7'
+
+services:
+  redis:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile.redis

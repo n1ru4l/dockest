@@ -1,0 +1,107 @@
+{
+    "time": "2019-10-11T11:11:57.434755",
+    "type": "container",
+    "action": "create",
+    "id": "8bc0b13be86b8658218e6cd8045717b2c1f51745744389bffd97434e78af42af",
+    "service": "redis",
+    "attributes": {"image": "foo_redis", "name": "foo_redis_1"}
+}
+{
+    "time": "2019-10-11T11:11:57.445643",
+    "type": "container",
+    "action": "attach",
+    "id": "8bc0b13be86b8658218e6cd8045717b2c1f51745744389bffd97434e78af42af",
+    "service": "redis",
+    "attributes": {"image": "foo_redis", "name": "foo_redis_1"}
+}
+{
+    "time": "2019-10-11T11:11:58.115535",
+    "type": "container",
+    "action": "start", 
+    "id": "8bc0b13be86b8658218e6cd8045717b2c1f51745744389bffd97434e78af42af", 
+    "service": "redis",
+    "attributes": {"image": "foo_redis", "name": "foo_redis_1"}}
+{
+    "time": "2019-10-11T11:12:03.077913", 
+    "type": "container", 
+    "action": "exec_create: docker-healthcheck ", 
+    "id": "8bc0b13be86b8658218e6cd8045717b2c1f51745744389bffd97434e78af42af", 
+    "service": "redis",
+    "attributes": {"execID": "cb665117a6ced9b3346645910c28af728f0b93556b37b4bfaec2de262e0f2534", "image": "foo_redis", "name": "foo_redis_1"}
+}
+{
+    "time": "2019-10-11T11:12:03.079344", 
+    "type": "container", 
+    "action": "exec_start: docker-healthcheck ", 
+    "id": "8bc0b13be86b8658218e6cd8045717b2c1f51745744389bffd97434e78af42af", 
+    "service": "redis", 
+    "attributes": {"execID": "cb665117a6ced9b3346645910c28af728f0b93556b37b4bfaec2de262e0f2534", "image": "foo_redis", "name": "foo_redis_1"}}
+{
+    "time": "2019-10-11T11:12:03.224951", 
+    "type": "container", 
+    "action": "exec_die",
+    "id": "8bc0b13be86b8658218e6cd8045717b2c1f51745744389bffd97434e78af42af",
+    "service": "redis",
+    "attributes": {"execID": "cb665117a6ced9b3346645910c28af728f0b93556b37b4bfaec2de262e0f2534", "exitCode": "0", "image": "foo_redis", "name": "foo_redis_1"}}
+{
+    "time": "2019-10-11T11:12:03.236112", 
+    "type": "container", 
+    "action": "health_status: healthy", 
+    "id": "8bc0b13be86b8658218e6cd8045717b2c1f51745744389bffd97434e78af42af", 
+    "service": "redis", 
+    "attributes": {"image": "foo_redis", "name": "foo_redis_1"}}
+{
+    "time": "2019-10-11T11:12:08.238418", 
+    "type": "container", 
+    "action": "exec_create: docker-healthcheck ", 
+    "id": "8bc0b13be86b8658218e6cd8045717b2c1f51745744389bffd97434e78af42af", 
+    "service": "redis", 
+    "attributes": {"execID": "326293029ce5e6d502149ac58d9f875f74ccd2c96ff21d1e44b81ff08db41737", "image": "foo_redis", "name": "foo_redis_1"}
+}
+{
+    "time": "2019-10-11T11:12:08.238883", 
+    "type": "container", 
+    "action": "exec_start: docker-healthcheck ", 
+    "id": "8bc0b13be86b8658218e6cd8045717b2c1f51745744389bffd97434e78af42af", 
+    "service": "redis", 
+    "attributes": {"execID": "326293029ce5e6d502149ac58d9f875f74ccd2c96ff21d1e44b81ff08db41737", "image": "foo_redis", "name": "foo_redis_1"}
+}
+{
+    "time": "2019-10-11T11:12:08.432386", 
+    "type": "container", 
+    "action": "exec_die", 
+    "id": "8bc0b13be86b8658218e6cd8045717b2c1f51745744389bffd97434e78af42af", 
+    "service": "redis", 
+    "attributes": {"execID": "326293029ce5e6d502149ac58d9f875f74ccd2c96ff21d1e44b81ff08db41737", "exitCode": "0", "image": "foo_redis", "name": "foo_redis_1"}
+}
+{
+    "time": "2019-10-11T11:12:13.394912", 
+    "type": "container", 
+    "action": "kill", 
+    "id": "8bc0b13be86b8658218e6cd8045717b2c1f51745744389bffd97434e78af42af", 
+    "service": "redis", 
+    "attributes": {"image": "foo_redis", "name": "foo_redis_1", "signal": "9"}
+}
+{
+    "time": "2019-10-11T11:12:13.443876", 
+    "type": "container", 
+    "action": "exec_create: docker-healthcheck ", 
+    "id": "8bc0b13be86b8658218e6cd8045717b2c1f51745744389bffd97434e78af42af", 
+    "service": "redis", 
+    "attributes": {"execID": "1a066756d66da17466b86dde999df210c1481dc1a1a0f090632fbdc05bf2ca79", "image": "foo_redis", "name": "foo_redis_1"}
+}
+{
+    "time": "2019-10-11T11:12:13.445339", 
+    "type": "container", 
+    "action": "exec_start: docker-healthcheck ", 
+    "id": "8bc0b13be86b8658218e6cd8045717b2c1f51745744389bffd97434e78af42af", 
+    "service": "redis", 
+    "attributes": {"execID": "1a066756d66da17466b86dde999df210c1481dc1a1a0f090632fbdc05bf2ca79", "image": "foo_redis", "name": "foo_redis_1"}}
+{
+    "time": "2019-10-11T11:12:13.605877", 
+    "type": "container", 
+    "action": "die", 
+    "id": "8bc0b13be86b8658218e6cd8045717b2c1f51745744389bffd97434e78af42af", 
+    "service": "redis", 
+    "attributes": {"exitCode": "137", "image": "foo_redis", "name": "foo_redis_1"}
+}
